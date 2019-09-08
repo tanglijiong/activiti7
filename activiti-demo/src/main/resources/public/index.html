@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>首页</title>
+    <!--<script th:src="@{/jquery.min.js}"></script>-->
+    <script src="/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            // 点击菜单
+            $(".show-page").bind("click", function(){
+                $(".main-body").html("");
+                $(".result-div").html("");
+                var url = $(this).attr("url");
+
+                $.ajax({
+                    async : false,
+                    cache : false,
+                    type : 'POST',
+                    url : url,
+                    dataType : "html",
+                    error : function() {
+                        alert('请求失败');
+                    },
+                    success : function(data) {
+                        $(".result-div").html(data);
+                    }
+                });
+            });
+
+            // 点击我要请假，开启流程
+            $(".show-instance").bind("click", function(){
+                // debugger
+                $(".main-body").html("");
+                $(".result-div").html("");
+                var url = $(this).attr("url");
+
+                $.ajax({
+                    async : true,
+                    cache : false,
+                    type : 'POST',
+                    url : url,
+                    dataType : "html",
+                    error : function() {
+                        alert('请求失败');
+                    },
+                    success : function(data) {
+                        $("input[name='instanceId']").val(data);
+                    }
+                });
+            });
+
+            // 绑定查看流程图
+            $(".show-img").bind("click", function(){
+                var instanceId = $("input[name='instanceId']").val();
+                if(instanceId == "") {
+                    alert("暂无流程！");
+                    return;
+                }
+                var imgHtml = '<embed src="/demo/showImg?instanceId=' + instanceId + '" style="display:block;width:1000px;height:450px" />';
+                $(".result-div").html(imgHtml);
+            });
+
+            // 查看任务
+            $(".show-task").bind("click", function(){
+                $.ajax({
+                    async : true,
+                    cache : false,
+                    type : 'POST',
+                    url : "/demo/toShowTask",
+                    data : {"aaabbbccc":"aa"},
+                    dataType : "html",
+                    error : function() {
+                        alert('请求失败');
+                    },
+                    success : function(data) {
+                        $(".result-div").html(data);
+                    }
+                });
+            });
+
+        });
+
+        /**
+         * 员工提交申请
+         */
+        function toLeave() {
+            $.ajax({
+                async : false,
+                cache : false,
+                type : 'POST',
+                url : "/demo/employeeApply",
+                dataType: "text",
+                data: $(".employee-leave").serialize(),
+                error : function() {
+                    alert('请求失败');
+                },
+                success : function(data) {
+                    alert(data);
+                }
+            });
+        }
+
+        /**
+         * 上级审核
+         */
+        function higherAudit() {
+            $.ajax({
+                async : false,
+                cache : false,
+                type : 'POST',
+                url : "/demo/higherLevelAudit",
+                dataType: "text",
+                data: $(".higher-audit").serialize(),
+                error : function() {
+                    alert('请求失败');
+                },
+                success : function(data) {
+                    alert(data);
+                }
+            });
+        }
+
+        /**
+         * 部门经理审核
+         */
+        function managerAudit() {
+            $.ajax({
+                async : false,
+                cache : false,
+                type : 'POST',
+                url : "/demo/divisionManagerAudit",
+                dataType: "text",
+                data: $(".manager-audit").serialize(),
+                error : function() {
+                    alert('请求失败');
+                },
+                success : function(data) {
+                    alert(data);
+                }
+            });
+        }
+
+        /**
+         * 上级审核
+         */
+        function viewTask(taskId, name) {
+            var url = "/demo/viewTask";
+            if(name != "上级审核") {
+                url = "/demo/viewTaskManager";
+            }
+
+
+            $.ajax({
+                async : false,
+                cache : false,
+                type : 'POST',
+                url : url,
+                data : {"taskId" : taskId},
+                dataType : "html",
+                error : function() {
+                    alert('请求失败');
+                },
+                success : function(data) {
+                    $(".result-div").html(data);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<!-- 菜单栏 -->
+<div class="main-menu">
+    <button class="show-instance" url="/demo/start">我要请假</button>
+    <button class="show-page" url="/demo/toLeave">开始填单</button>
+    <button class="show-img">查看流程图</button>
+    <button class="show-task">查看任务</button>
+</div>
+<br/>
+流程实例ID:<input type="text" name="instanceId"/>
+<br/>
+<!-- 操作栏 -->
+<div class="main-body">
+
+</div>
+<br/>
+<!-- 结果栏 -->
+<div class="result-div">
+    <embed src="/demo/showImg?instanceId=e7d8d91b-cfb1-11e9-8000-a402b94a31d0" style="display:block;width:1000px;height:450px" />
+    <br>
+    <!-- <img src="/static/leave-process.png"/> -->
+</div>
+</body>
+</html>

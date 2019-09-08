@@ -1,0 +1,38 @@
+server:
+  port: 8081
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/activiti-demo?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&serverTimezone=UTC&nullCatalogMeansCurrent=true
+    username: root
+    password: 123456
+
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: create
+    show-sql: true
+
+
+
+
+
+  thymeleaf:
+     mode: HTML
+     encoding: utf-8
+     # 禁用缓存
+     cache: false
+#  application:
+#     name: actdemo # 注册应用名
+#  mvc:
+#     static-path-pattern: /static/** # 静态资源路径
+
+  activiti: # 参考配置https://www.cnblogs.com/liaojie970/p/8857710.html
+     database-schema: ACTIVITI  # 自动建表
+     database-schema-update: true
+     history-level: full
+     db-history-used: true
